@@ -6,3 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+embassy-rp = { version = "0.1.0", git = "https://github.com/embassy-rs/embassy.git", features = ["nightly", "unstable-pac", "unstable-traits", "time-driver"] }
+fixed = "1.23.1"
+fixed-macro = "1.2.0"
+pio = "0.2.1"
+smart-leds = "0.3.0"
