@@ -1332,5 +1332,4 @@ dependencies = [
  "fixed-macro",
  "pio",
  "smart-leds",
- "smart-leds-trait",
 ]
