@@ -4,7 +4,6 @@ use embassy_rp::dma::{AnyChannel, Channel};
 use embassy_rp::pio::{
     Common, Config, FifoJoin, Instance, PioPin, ShiftConfig, ShiftDirection, StateMachine,
 };
-use embassy_rp::relocate::RelocatedProgram;
 use embassy_rp::{clocks, into_ref, Peripheral, PeripheralRef};
 use fixed::types::U24F8;
 use fixed_macro::fixed;
@@ -57,8 +56,7 @@ impl<'d, P: Instance, const S: usize, const N: usize> Ws2812<'d, P, S, N> {
         cfg.set_out_pins(&[&out_pin]);
         cfg.set_set_pins(&[&out_pin]);
 
-        let relocated = RelocatedProgram::new(&prg);
-        cfg.use_program(&pio.load_program(&relocated), &[&out_pin]);
+        cfg.use_program(&pio.load_program(&prg), &[&out_pin]);
 
         // Clock config, measured in kHz to avoid overflows
         let clock_freq = U24F8::from_num(clocks::clk_sys_freq() / 1000);
@@ -87,7 +85,9 @@ impl<'d, P: Instance, const S: usize, const N: usize> Ws2812<'d, P, S, N> {
         // Precompute the word bytes from the colors
         let mut words = [0u32; N];
         for i in 0..N {
-            let word = (u32::from(colors[i].g) << 24) | (u32::from(colors[i].r) << 16) | (u32::from(colors[i].b) << 8);
+            let word = (u32::from(colors[i].g) << 24)
+                | (u32::from(colors[i].r) << 16)
+                | (u32::from(colors[i].b) << 8);
             words[i] = word;
         }
 
